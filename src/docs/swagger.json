@@ -1,0 +1,62 @@
+{
+  "swagger":"2.0",
+  "info":{
+    "description":"This Documentation describes the routes and functions of the  File Upload",
+    "version":"1.0.0",
+    "title": "File Upload",
+    "contact": {
+      "name": "Samuel Oyegbemi",
+      "email":"samueloyegbemi@gmail.com"
+    },
+    "license":{
+      "name":"Apache 2.0",
+      "url":"http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "",
+  "basePath":"/api/v1",
+  "schemes":["http","https"],
+  "parameters": {
+    "Limit":{
+      "name":"limit",
+      "description":"Limit of the the results to be returned at once",
+      "in":"query",
+      "required":false,
+      "type":"string"
+    },
+    "Page":{
+      "name":"page",
+      "description":"Page to be returned",
+      "in":"query",
+      "required":false,
+      "type":"string"
+    },
+    "Order": {
+      "name":"sortOrder",
+      "description":"Sort order for result",
+      "in":"query",
+      "required":false,
+      "type":"string"
+    },
+    "ConfigGroup": {
+      "name": "group",
+      "description": "The group filter",
+      "in": "query",
+      "required": false,
+      "type": "string"
+    }
+  },
+  "definitions":{
+    "SuccessResponse":{
+      "type":"object",
+      "properties":{
+        "status":{"example": "OK"},
+        "statusCode":{"example": 200},
+        "data":{"example":{}},
+        "message":{"example":"Success"}
+      }
+    }
+  },
+  "paths":{
+  }
+}

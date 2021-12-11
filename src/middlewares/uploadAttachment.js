@@ -3,15 +3,12 @@ import fs from 'fs';
 import multer from 'multer';
 import { getEnv } from '@wbc-nodejs/core';
 import { convertToBoolean } from '../helpers/utility';
-import {getFileName} from "../helpers/files";
+import { getFileName } from '../helpers/files';
 
 const diskUploader = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      const folder = path.join(
-        path.dirname(require.main.filename),
-        'public/uploads',
-      );
+      const folder = path.join(path.dirname(require.main.filename), 'public/uploads');
       if (!fs.existsSync(folder)) {
         fs.mkdirSync(folder, { recursive: true });
       }
@@ -59,17 +56,10 @@ const postUploadHandler = options => (req, res, next) => {
  * @return {(function(...[*]=))[]} Express middleware
  */
 export const prepareUpload = ({ uploadPath, fileName = '' }) => async (req, res, next) => {
-  const {
-    FILE_ROOT_FOLDER,
-    FILE_STORAGE_LOCATION,
-    ...otherConfig
-  } = getEnv();
   const baseFolder = '/';
   const folder = typeof uploadPath === 'function' ? await uploadPath(req) : uploadPath;
   fileName = typeof fileName === 'function' ? await fileName(req) : fileName;
   req.uploadConfig = {
-    ...otherConfig,
-    FILE_STORAGE_LOCATION,
     folder: path.join(baseFolder, folder),
     fileName,
   };

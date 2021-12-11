@@ -33,11 +33,11 @@ export const readContent = filePath => {
 
 /**
  * @name removeLocalAttachment
- * @param {string} baseFolder
  * @param {string} attPath
  * @return {Promise<boolean>} Removed
  */
-export const removeLocalAttachment = async (baseFolder, attPath) => {
+export const removeLocalAttachment = async attPath => {
+  const baseFolder = 'uploads/';
   return new Promise((resolve, reject) => {
     try {
       unlinkSync(attPath);
@@ -69,17 +69,15 @@ export const removeLocalAttachment = async (baseFolder, attPath) => {
 
 /**
  * @name removeFile
- * @param {string} baseFolder
  * @param {string} link
  * @return {Promise<boolean>} Removed
  */
-export const removeFile = async (baseFolder, link) => {
-  [, link] = link.split(`${baseFolder}/`);
+export const removeFile = async link => {
+  [, link] = link.split(`uploads/`);
   if (!link) return false;
-  link = path.join(path.dirname(require.main.filename), 'public/uploads', baseFolder, link);
+  link = path.join(path.dirname(require.main.filename), 'public/uploads', link);
   if (existsSync(link)) {
-    return removeLocalAttachment(baseFolder, link);
+    return removeLocalAttachment(link);
   }
   return false;
 };
-

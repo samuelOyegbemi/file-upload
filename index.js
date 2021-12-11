@@ -12,6 +12,7 @@ import ResponseTime from 'response-time';
 import FileStream from 'file-stream-rotator';
 import swaggerUi from 'swagger-ui-express';
 import chalk from 'chalk';
+import mongoose from 'mongoose';
 import {
   logger,
   errorHandler,
@@ -26,7 +27,7 @@ import swaggerDoc from './src/docs/swagger.json';
 import { convertToBoolean } from './src/helpers/utility';
 import corsOptions from './src/config/cors';
 
-const { NODE_ENV, PORT, ENABLE_CLUSTERING } = getEnv();
+const { NODE_ENV, PORT, ENABLE_CLUSTERING, MONGODB_URL } = getEnv();
 const numberOfCPU = os.cpus().length;
 
 let httpLogger;
@@ -68,7 +69,16 @@ if (convertToBoolean(ENABLE_CLUSTERING) && (cluster.isPrimary || cluster.isMaste
   let appPort = PORT || '5100';
 
   appPort = normalizePort(appPort);
-
+  mongoose.connect(MONGODB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  const db = mongoose.connection;
+  // eslint-disable-next-line no-console
+  db.on('error', console.error.bind(console, 'DB connection error: '));
+  db.once('open', () => {
+    logger.info(chalk.green('Connected to db successfully!'));
+  });
   // security configuration
   app.use(helmet());
   app.use(helmet.hidePoweredBy());

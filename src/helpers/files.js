@@ -70,14 +70,13 @@ export const removeLocalAttachment = async attPath => {
 /**
  * @name removeFile
  * @param {string} link
- * @return {Promise<boolean>} Removed
+ * @return {Promise<void>} Removed
  */
 export const removeFile = async link => {
   [, link] = link.split(`uploads/`);
-  if (!link) return false;
+  if (!link) return;
   link = path.join(path.dirname(require.main.filename), 'public/uploads', link);
   if (existsSync(link)) {
-    return removeLocalAttachment(link);
+    return unlinkSync(link);
   }
-  return false;
 };

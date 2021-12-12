@@ -22,10 +22,8 @@ const diskUploader = multer({
 
 // eslint-disable-next-line require-jsdoc
 const uploadHandler = options => (req, res, next) => {
-  if (!req.uploadConfig) {
-    throw new Error('prepareUpload middleware must be called first!');
-  }
   const { attachmentKey, type } = options;
+  req.uploadConfig = req.uploadConfig || {};
   req.uploadConfig.isLocalDrive = true;
   return type === 'single'
     ? diskUploader.single(attachmentKey)(req, res, next)
@@ -37,12 +35,12 @@ const postUploadHandler = options => (req, res, next) => {
   if (req.uploadConfig.isLocalDrive && req.file) {
     const relativePath = req.file.path.split('public/uploads/')[1];
     const httpProtocol = convertToBoolean(getEnv().ENFORCE_HTTPS) ? 'https' : req.protocol;
-    req.file.path = `${httpProtocol}://${req.get('host')}/uploads/${relativePath}`;
+    req.file.url = `${httpProtocol}://${req.get('host')}/uploads/${relativePath}`;
   }
   if (req.file && req.body) {
     req.body = {
       ...req.body,
-      [options.attachmentKey]: req.file.path,
+      [options.attachmentKey]: req.file.url,
     };
   }
   next();
@@ -56,7 +54,7 @@ const postUploadHandler = options => (req, res, next) => {
  * @return {(function(...[*]=))[]} Express middleware
  */
 export const prepareUpload = ({ uploadPath, fileName = '' }) => async (req, res, next) => {
-  const baseFolder = '/';
+  const baseFolder = '';
   const folder = typeof uploadPath === 'function' ? await uploadPath(req) : uploadPath;
   fileName = typeof fileName === 'function' ? await fileName(req) : fileName;
   req.uploadConfig = {

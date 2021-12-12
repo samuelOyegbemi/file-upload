@@ -1,5 +1,10 @@
-import { response } from '@wbc-nodejs/core';
+import { BadRequestError, response } from '@wbc-nodejs/core';
+import runAsync from 'async';
 import CallRate from '../models/callrate';
+import spreadsheet from '../helpers/spreadsheet';
+import { removeFile } from '../helpers/files';
+import { getMaxParallelAsync } from '../helpers/utility';
+
 /**
  * @name getCallRates
  * @param {object} req - Express request object
@@ -19,8 +24,19 @@ const getCallRates = async (req, res) => {
  * @return {Object} User object
  */
 const uploadCallRateSheet = async (req, res) => {
-  const { file } = req.body;
-  return response.ok(res, { file });
+  if (!req.file || !req.file.path) {
+    throw new BadRequestError('No file found');
+  }
+  const data = spreadsheet.loadData(req.file.path);
+  await runAsync
+    .mapLimit(data, getMaxParallelAsync(req), async rate =>
+      CallRate.updateOne({ id: rate.id }, rate, { upsert: true }),
+    )
+    .catch();
+  removeFile(req.file.path).catch();
+  if (!req.timedout) {
+    return response.ok(res, { message: 'Data uploaded successfully!' });
+  }
 };
 
 export default {

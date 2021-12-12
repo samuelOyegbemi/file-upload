@@ -2,6 +2,11 @@ import mongoose from 'mongoose';
 import PaginationPlugin from '../helpers/pagination';
 
 const CallRateSchema = new mongoose.Schema({
+  id: {
+    type: Number,
+    unique: true,
+    index: true,
+  },
   country: {
     type: String,
     required: true,

@@ -21,6 +21,7 @@ import {
   NotFoundError,
   response,
   normalizePort,
+  CustomError,
 } from '@wbc-nodejs/core';
 import router from './src/routes';
 import swaggerDoc from './src/docs/swagger.json';
@@ -95,6 +96,9 @@ if (convertToBoolean(ENABLE_CLUSTERING) && (cluster.isPrimary || cluster.isMaste
   app.use('/api/v1', router);
 
   app.use('*', req => {
+    if (req.timedout) {
+      throw new CustomError('Request timeout!', { httpStatusCode: 408 });
+    }
     throw new NotFoundError(`Method [${req.method}] not found for route [${req.originalUrl}]`);
   });
 

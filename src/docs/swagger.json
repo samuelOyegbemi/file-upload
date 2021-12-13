@@ -149,7 +149,7 @@
         ],
         "responses":{
           "202":{
-            "description":"returns data for the newly registered user",
+            "description":"returns id for an accepted upload, this id will be used to query the status of the upload using the status endpoint",
             "schema":{"$ref":"#/definitions/SuccessUploadResponse"}
           }
         }

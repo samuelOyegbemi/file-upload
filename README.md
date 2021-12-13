@@ -1,5 +1,5 @@
 # Call Rate API
-This is an test api for call rates
+This is an test api for call rates. A working example is [deployed here](https://call-rate.herokuapp.com/)
 
 * [Technologies](#technologies)
 * [Setup](#setup)

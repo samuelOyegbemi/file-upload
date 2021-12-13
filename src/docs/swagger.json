@@ -1,9 +1,9 @@
 {
   "swagger":"2.0",
   "info":{
-    "description":"This Documentation describes the routes and functions of the  File Upload",
+    "description":"This Documentation describes the routes and functions of the  Call rate API. Download <a href='/sample/call-rate.csv'>sample csv here</a>",
     "version":"1.0.0",
-    "title": "File Upload",
+    "title": "Call Rates API",
     "contact": {
       "name": "Samuel Oyegbemi",
       "email":"samueloyegbemi@gmail.com"
@@ -30,23 +30,19 @@
       "in":"query",
       "required":false,
       "type":"string"
-    },
-    "Order": {
-      "name":"sortOrder",
-      "description":"Sort order for result",
-      "in":"query",
-      "required":false,
-      "type":"string"
-    },
-    "ConfigGroup": {
-      "name": "group",
-      "description": "The group filter",
-      "in": "query",
-      "required": false,
-      "type": "string"
     }
   },
   "definitions":{
+    "CallRate":{
+      "type":"object",
+      "properties":{
+        "id":{"type":"number","example":4},
+        "code":{"type":"string","example":"9340"},
+        "country":{"type":"string","example":"AFGHANISTAN"},
+        "rate":{"type":"number","example": 130},
+        "zone":{"type":"number","example": 7}
+      }
+    },
     "SuccessResponse":{
       "type":"object",
       "properties":{
@@ -55,8 +51,90 @@
         "data":{"example":{}},
         "message":{"example":"Success"}
       }
+    },
+    "SuccessCallRatesResponse":{
+      "type":"object",
+      "properties":{
+        "status":{"example": "OK"},
+        "statusCode":{"example": 200},
+        "data":{
+          "type":"object",
+          "properties": {
+            "results": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "$ref":"#/definitions/CallRate"
+              }
+            },
+            "limit":{"type":"number","example":10},
+            "page":{"type":"number","example":3},
+            "item_count":{"type":"number","example":10},
+            "number_of_pages":{"type":"number","example":5},
+            "previous_page":{"type":"number","example":2},
+            "next_page":{"type":"number","example":4},
+            "total":{"type":"number","example":46}
+          }},
+        "message":{"example":"Ok"}
+      }
     }
   },
   "paths":{
+    "/call-rates":{
+      "get":{
+        "tags":["rates"],
+        "summary":"Look up all call rates",
+        "description":"This is a route to look up all call rates that has been uploaded via sheet",
+        "operationId":"rateLookUp",
+        "produces":["application/json"],
+        "parameters":[
+          {"$ref":"#/parameters/Limit"},
+          {"$ref":"#/parameters/Page"}
+        ],
+        "responses":{
+          "200":{
+            "description":"returns data for rates",
+            "schema":{"$ref":"#/definitions/SuccessCallRatesResponse"}
+          }
+        }
+      },
+      "delete":{
+        "tags":["rates"],
+        "summary":"delete all call rates",
+        "description":"This is a route to delete all call rates that has been uploaded via sheet",
+        "operationId":"deleteRate",
+        "produces":["application/json"],
+        "responses":{
+          "200":{
+            "description":"returns success response",
+            "schema":{"$ref":"#/definitions/SuccessResponse"}
+          }
+        }
+      }
+    },
+    "/call-rates/upload":{
+      "post":{
+        "tags":["rates"],
+        "summary":"Upload call rate sheet",
+        "description":"This is a route to upload the call rate sheet",
+        "operationId":"uploadCallRateSheet",
+        "produces":["application/json"],
+        "consumes":["application/x-www-form-urlencoded","multipart/form-data"],
+        "parameters":[
+          {
+            "name":"file",
+            "in":"formData",
+            "required":true,
+            "type":"file"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"returns data for the newly registered user",
+            "schema":{"$ref":"#/definitions/SuccessResponse"}
+          }
+        }
+      }
+    }
   }
 }

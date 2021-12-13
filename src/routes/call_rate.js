@@ -17,4 +17,6 @@ callRateRouter.post(
   callRateController.uploadCallRateSheet,
 );
 
+callRateRouter.delete('/', callRateController.deleteAll);
+
 export default callRateRouter;

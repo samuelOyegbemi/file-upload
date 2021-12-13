@@ -21,7 +21,7 @@ const getCallRates = async (req, res) => {
  * @param {object} req - Express request object
  * @param {object} res - Express response object
  * @param {Function} next - Express next function
- * @return {Object} User object
+ * @return {Response} Express response
  */
 const uploadCallRateSheet = async (req, res) => {
   if (!req.file || !req.file.path) {
@@ -39,7 +39,19 @@ const uploadCallRateSheet = async (req, res) => {
   }
 };
 
+/**
+ * @name deleteAll
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ * @return {Response} Express response
+ */
+const deleteAll = async (req, res) => {
+  await CallRate.deleteMany();
+  return response.ok(res, { message: 'All call rates deleted successfully!' });
+};
+
 export default {
   getCallRates,
   uploadCallRateSheet,
+  deleteAll,
 };

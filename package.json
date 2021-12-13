@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "DEBUG=development && nodemon --exec babel-node index.js",
     "build": "yarn clean && yarn build-babel",
-    "build-babel": "babel -d ./build index.js && babel ./src --out-dir build/src",
+    "build-babel": "babel -d ./build index.js && babel ./src --out-dir build/src --copy-files",
     "clean": "rm -rf build && mkdir build",
     "prestart": "yarn build",
     "start": "node ./build/index.js",

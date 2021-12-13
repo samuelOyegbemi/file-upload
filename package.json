@@ -30,10 +30,6 @@
   },
   "homepage": "https://github.com/samuelOyegbemi/file-upload/#readme",
   "devDependencies": {
-    "@babel/cli": "^7.12.1",
-    "@babel/core": "^7.12.3",
-    "@babel/node": "^7.12.1",
-    "@babel/preset-env": "^7.12.1",
     "eslint": "^7.11.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.7.0",
@@ -44,6 +40,10 @@
     "pretty-quick": "^2.0.1"
   },
   "dependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
     "@wbc-nodejs/core": "^3.0.2",
     "async": "^3.2.2",
     "axios": "^0.21.1",

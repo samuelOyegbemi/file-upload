@@ -52,6 +52,25 @@
         "message":{"example":"Success"}
       }
     },
+    "SuccessUploadResponse":{
+      "type":"object",
+      "properties":{
+        "id":{"example": "8KLoHWaj-"}
+      }
+    },
+    "SuccessUploadProgressResponse":{
+      "type":"object",
+      "properties":{
+        "id":{"example": "8KLoHWaj-"},
+        "progress":{
+          "type": "object",
+          "properties": {
+            "completed": {"example":10},
+            "of": {"example":18430}
+          }
+        }
+      }
+    },
     "SuccessCallRatesResponse":{
       "type":"object",
       "properties":{
@@ -129,8 +148,36 @@
           }
         ],
         "responses":{
-          "200":{
+          "202":{
             "description":"returns data for the newly registered user",
+            "schema":{"$ref":"#/definitions/SuccessUploadResponse"}
+          }
+        }
+      }
+    },
+    "/call-rates/upload-status/{id}": {
+      "get":{
+        "tags":["rates"],
+        "summary":"Check upload status",
+        "description":"This is a route to check upload status with status id",
+        "operationId": "uploadStatus",
+        "produces":["application/json"],
+        "parameters":[
+          {
+            "name": "id",
+            "in": "path",
+            "description":"The id of the upload operation",
+            "required": true,
+            "type":"string"
+          }
+        ],
+        "responses":{
+          "202":{
+            "description":"returns data for upload upload in progress",
+            "schema":{"$ref":"#/definitions/SuccessUploadProgressResponse"}
+          },
+          "200":{
+            "description":"returns data for complete upload",
             "schema":{"$ref":"#/definitions/SuccessResponse"}
           }
         }

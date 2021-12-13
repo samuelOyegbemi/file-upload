@@ -5,7 +5,7 @@ import uploadAttachment from '../middlewares/uploadAttachment';
 import callRateController from '../controllers/call_rate';
 import setRequestTimeout from '../middlewares/setRequestTimeout';
 
-const { delay } = DelayedResponse.init();
+const { delay, status } = DelayedResponse.init();
 const callRateRouter = express.Router();
 
 callRateRouter.get('/', callRateController.getCallRates);
@@ -19,6 +19,8 @@ callRateRouter.post(
   delay(),
   callRateController.uploadCallRateSheet,
 );
+
+callRateRouter.get('/upload-status/:id', status());
 
 callRateRouter.delete('/', callRateController.deleteAll);
 

@@ -28,9 +28,14 @@ const uploadCallRateSheet = async (req, res) => {
     throw new BadRequestError('No file found');
   }
   const data = spreadsheet.loadData(req.file.path);
+  const state = { completed: 0, of: data.length };
   await runAsync
     .mapLimit(data, getMaxParallelAsync(req), async rate =>
-      CallRate.updateOne({ id: rate.id }, rate, { upsert: true }),
+      CallRate.updateOne({ id: rate.id }, rate, { upsert: true }).then(result => {
+        state.completed += 1;
+        res.progress(state);
+        return result;
+      }),
     )
     .catch();
   removeFile(req.file.path).catch();
